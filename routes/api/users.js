@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const tokenkey = require('../../config/keys');
+const passport = require('passport');
 
 // pull in User model
 const User = require('../../models/users')
@@ -37,10 +40,7 @@ router.post("/register", (req, res) => {
                 .then((user) => bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(req.body.password, salt, (err, hash) => {
                         if(err) { 
-                            console.log('******************')
                             console.log('error = ', err)
-                            console.log('******************')
-
                         } else { 
                                 user.password = hash
                                 user.save()
@@ -65,14 +65,40 @@ router.post('/login', (req, res) => {
                 return res.status(404).json({ email: 'User not found'})
             }
         // found user email; check password
-        bcrypt.compare(password, user.password)
-            .then(match => {
-                if (!match) {
-                    return res.status(400).json({ password: 'Password is incorrect'})
-                } else {
-                    res.json({ msg: 'login successful'})
-                }
-            })
+            bcrypt.compare(password, user.password)
+                .then(match => {
+                    if (!match) {
+                        return res.status(400).json({ password: 'Password is incorrect'})
+                    } else {
+                        const payload = {id: user.id, name: user.name, avatar: user.avatar};
+                        jwt.sign(
+                            payload, 
+                            tokenkey.jwt, 
+                            {expiresIn: 3600}, // expires in 1 hr.
+                            (err, token) => {   // pass err, token
+                                console.log(err);
+                                res.json({
+                                    success: true,
+                                    token: 'Bearer ' + token  // format token using Bearer (jwt protocol)
+                                });
+                            }
+                        )
+                    }
+                })
         })
 })
+
+//  route: GET /api/users/current
+//  desc: returns current user
+//  access: private
+router.get('/current', passport.authenticate('jwt', { session: false }), 
+    (req, res) => {
+        res.json({
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email
+        })
+})
+
+
 module.exports = router;
