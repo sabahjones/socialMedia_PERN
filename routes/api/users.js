@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const tokenkey = require('../../config/keys');
 const passport = require('passport');
 
+// field validation
+const validateRegisterInput = require('../../validation/register')
 // pull in User model
 const User = require('../../models/users')
 
@@ -18,6 +20,14 @@ router.get("/test", (req, res) => res.json({ test: "users test route works" }));
 //  desc: Register new user
 //  access: public
 router.post("/register", (req, res) => {
+
+    // validate user input
+    const {errors, isValid } = validateRegisterInput(req.body);
+    if(!isValid){
+        return res.status(400).json(errors);
+    }  // else { if no errors move onto registration}  
+
+    // before registering a new user, see if user exists in db
     User.find({ where: { email: req.body.email }})
         .then((user) => {
             if(user){
@@ -57,7 +67,6 @@ router.post("/register", (req, res) => {
 router.post('/login', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-
     //find user via email
     User.find({ where: {email}})
         .then(user => {
