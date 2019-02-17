@@ -6,15 +6,15 @@ const sequelize = new Sequelize(db);
 const User = sequelize.define('user', {
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    // allowNull: false
   },
   email: {
     type: Sequelize.STRING,
-    allowNull: false
+    // allowNull: false
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
+    // allowNull: false
   },
   avatar: {
     type: Sequelize.STRING,

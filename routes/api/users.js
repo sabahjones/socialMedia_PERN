@@ -6,17 +6,20 @@ const jwt = require("jsonwebtoken");
 const tokenkey = require("../../config/keys");
 const passport = require("passport");
 
+
 // field validation
-const validateRegisterInput = require("../../validation/register");
-const validateLogin = require("../../validation/login");
+const validateRegisterInput = require("../validation/register");
+const validateLogin = require("../validation/login");
 
 // pull in User model
-const User = require("../../models/users");
+const User = require("../../models/user");
 
 //  route: GET /api/users/test
 //  desc: test for users route
 //  access: public
-router.get("/test", (req, res) => res.json({ test: "users test route works" }));
+router.get("/test", (req, res) => {
+  res.json({ test: "users test route works" });
+})
 
 //  route: Post api/users/register
 //  desc: Register new user
@@ -81,7 +84,6 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
   //find user via email
   User.find({ where: { email } }).then(user => {
-    console.log(user);
     if (!user) {
       errors.notFound = "User not found";
       return res.status(404).json(errors);
