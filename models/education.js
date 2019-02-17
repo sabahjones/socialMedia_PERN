@@ -8,9 +8,9 @@ const Education = sequelize.define('education', {
   school: { type: Sequelize.STRING },
   degree: { type: Sequelize.STRING },
   field: { type: Sequelize.STRING },
-  from: { type: Sequelize.DATE },
-  to: { type: Sequelize.DATE },
-  current: { type: Sequelize.STRING },
+  schoolfrom: { type: Sequelize.DATE },
+  schoolto: { type: Sequelize.DATE },
+  schoolcurrent: { type: Sequelize.STRING },
   description: { type: Sequelize.STRING },
 });
 

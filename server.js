@@ -13,7 +13,6 @@ const connect = require("./config/dbconnect");
 const sequelize = new Sequelize(connect.postGres);
 
 // import db models & define base route
-// purely for development
 const User = require("./models/user");
 const Profile = require("./models/profile");
 const Social = require("./models/social");
@@ -40,6 +39,14 @@ const Education = require("./models/education")
 //     userId: '1'
 //   })
 // })
+
+Social.sync({ force: true }).then(() => {
+  return Profile.create({
+    youtube: 'www.facebook/superman the Pirate',
+    twitter: 'twitter',
+    profileId: '1'
+  })
+})
 
 
 // middleware

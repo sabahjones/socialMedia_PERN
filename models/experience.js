@@ -17,15 +17,15 @@ const Experience = sequelize.define('experience', {
   location: {
     type: Sequelize.STRING,
   },
-  from: {
+  companyfrom: {
     type: Sequelize.DATE,
     // allowNull: false
   },
-  current: {
+  companycurrent: {
     type: Sequelize.BOOLEAN,
     // allowNull: false
   },
-  to: {
+  companyto: {
     type: Sequelize.DATE,
     // allowNull: false
   },
